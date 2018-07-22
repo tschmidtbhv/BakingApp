@@ -15,21 +15,19 @@ import de.naturalsoft.bakingapp.ui.shared.interfaces.OnStepListItemListener;
  */
 public class DetailActivity extends BaseActivity implements OnStepListItemListener {
 
-    private static Fragment mFragment;
-    private static final Object LOCK = new Object();
-
     @Override
     protected Fragment getFragment() {
 
-        synchronized (LOCK){
-            if(mFragment == null){
-                mFragment = DetailFragment.getInstance();
-                if(isTablet()){
-                   setContainerFragment(R.id.main_container, DetailVideoFragment.getInstance());
-                }
-            }
+        Fragment fragment = getCurrentActiviFragment();
+        if(fragment == null) fragment = DetailFragment.getInstance();
+
+        replaceFragment(fragment);
+
+        if (isTablet()) {
+            setContainerFragment(R.id.main_container, DetailVideoFragment.getInstance());
         }
-        return mFragment;
+
+        return fragment;
     }
 
     @Override
@@ -40,22 +38,27 @@ public class DetailActivity extends BaseActivity implements OnStepListItemListen
     @Override
     public void onItemClicked(Steps step) {
 
-        ((DetailFragment)getCurrentActiviFragment()).getDetailViewModel().setSteps(step);
+        ((DetailFragment) getCurrentActiviFragment()).getDetailViewModel().setSteps(step);
 
-        if(!isTablet()) {
-            mFragment = DetailVideoFragment.getInstance();
-            replaceFragment(mFragment);
-        }else {
+        if (!isTablet()) {
+            replaceFragment(DetailVideoFragment.getInstance());
+        } else {
             //Update Main Container
         }
     }
 
     @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     public void onBackPressed() {
-        if(mFragment.getClass().isAssignableFrom(DetailVideoFragment.class)){
-            mFragment = DetailFragment.getInstance();
-            swapFragment(mFragment);
-        }else {
+        if (getCurrentActiviFragment().getClass().isAssignableFrom(DetailVideoFragment.class)) {
+
+            swapFragment(DetailFragment.getInstance());
+        } else {
             super.onBackPressed();
         }
     }

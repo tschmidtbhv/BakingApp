@@ -9,6 +9,9 @@ import android.util.Log;
 import java.util.List;
 
 import de.naturalsoft.bakingapp.data.dataObjects.Receipe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -54,33 +57,27 @@ public class NetworkDataSource {
 
         Log.d(CLASSTAG, "loadRecipesFromServer");
         RecipesClient client = mRetrofit.create(RecipesClient.class);
-        Call<List<Receipe>> call = client.getRecipes();
+        client.getRecipes()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new DisposableObserver<List<Receipe>>() {
+                    @Override
+                    public void onNext(List<Receipe> receipes) {
+                        mDownloadedRecipes.postValue(receipes);
+                    }
 
-        if (call != null) {
-            doCall(call);
-        }
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(CLASSTAG, "response was not successfull " + e.getLocalizedMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.d(CLASSTAG, "loading successfully");
+                    }
+                });
     }
-
-    private void doCall(Call<List<Receipe>> call) {
-
-        call.enqueue(new Callback<List<Receipe>>() {
-
-            @Override
-            public void onResponse(Call<List<Receipe>> call, Response<List<Receipe>> response) {
-                if(response.isSuccessful()) {
-                    mDownloadedRecipes.postValue(response.body());
-                }else {
-                    Log.d(CLASSTAG, "response was not successfull " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Receipe>> call, Throwable t) {
-                Log.d(CLASSTAG, "onFailure " + t.getLocalizedMessage());
-            }
-        });
-    }
-
+    
     public LiveData<List<Receipe>> getCurrentRecipes() {
         return mDownloadedRecipes;
     }

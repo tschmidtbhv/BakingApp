@@ -3,11 +3,15 @@ package de.naturalsoft.bakingapp.data;
 import android.arch.lifecycle.LiveData;
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.List;
 
 import de.naturalsoft.bakingapp.data.dataObjects.Receipe;
 import de.naturalsoft.bakingapp.data.database.ReceipeDao;
 import de.naturalsoft.bakingapp.data.network.NetworkDataSource;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 
@@ -31,7 +35,7 @@ public class BackingRepository {
 
         RxJavaPlugins.onSingleScheduler(Schedulers.single()).scheduleDirect(() -> {
             int recipesInDatabase = mReceipeDao.countAllRecipes();
-            if(recipesInDatabase <= 0){
+            if (recipesInDatabase <= 0) {
                 setObserver();
                 mNetworkDataSource.loadRecipesFromServer();
             }
@@ -61,10 +65,30 @@ public class BackingRepository {
 
     private void setObserver() {
         LiveData<List<Receipe>> recipes = mNetworkDataSource.getCurrentRecipes();
-        recipes.observeForever(recipesFromNetwork ->{
-            RxJavaPlugins.onSingleScheduler(Schedulers.single()).scheduleDirect(() -> {
-                mReceipeDao.insertRecipes(recipesFromNetwork);
+        recipes.observeForever(recipesFromNetwork -> {
+
+            getInsertObservable(recipesFromNetwork).subscribeOn(Schedulers.io()).subscribe(new DisposableObserver<List<Receipe>>() {
+                @Override
+                public void onNext(List<Receipe> receipes) {
+                    mReceipeDao.insertRecipes(receipes);
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Log.d(CLASSTAG, "onError while saving recipes");
+                }
+
+                @Override
+                public void onComplete() {
+                    Log.d(CLASSTAG, "onComplete");
+                }
             });
+        });
+    }
+
+    private Observable<List<Receipe>> getInsertObservable(List<Receipe> recipes) {
+        return Observable.defer(() -> {
+            return Observable.just(recipes);
         });
     }
 }

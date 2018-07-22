@@ -3,7 +3,8 @@ package de.naturalsoft.bakingapp.data.network;
 import java.util.List;
 
 import de.naturalsoft.bakingapp.data.dataObjects.Receipe;
-import retrofit2.Call;
+import io.reactivex.Observable;
+
 import retrofit2.http.GET;
 
 /**
@@ -13,5 +14,5 @@ import retrofit2.http.GET;
 public interface RecipesClient {
 
     @GET("android-baking-app-json")
-    Call<List<Receipe>> getRecipes();
+    Observable<List<Receipe>> getRecipes();
 }

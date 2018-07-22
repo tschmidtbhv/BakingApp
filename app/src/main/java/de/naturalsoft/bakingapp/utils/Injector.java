@@ -17,6 +17,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public interface Injector {
 
+    static <T> ViewModelProvider.NewInstanceFactory provideViewModelFactory(Context context, int recipeId) {
+
+        BackingRepository backingRepository = provideBackingRepository(context.getApplicationContext(), provideRetrofit());
+        return new ViewModelFactory(backingRepository, recipeId);
+    }
+
 
     static <T> ViewModelProvider.NewInstanceFactory provideViewModelFactory(Context context) {
 

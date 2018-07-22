@@ -16,16 +16,18 @@ import de.naturalsoft.bakingapp.data.dataObjects.Steps;
  */
 public class DetailViewModel extends ViewModel {
 
-
     private final BackingRepository mBackingRepository;
+    private final LiveData<Receipe> mRecipe;
+
     private static MutableLiveData<Steps> mStep = new MutableLiveData<>();
 
-    public DetailViewModel(BackingRepository repository){
+    public DetailViewModel(BackingRepository repository, int recipeId) {
         mBackingRepository = repository;
+        mRecipe = mBackingRepository.getRecipeForId(recipeId);
     }
 
-    public LiveData<Receipe> getRecipeForId(int id){
-        return mBackingRepository.getRecipeForId(id);
+    public LiveData<Receipe> getRecipe(){
+        return  mRecipe;
     }
 
     public MutableLiveData<Steps> getStep() {

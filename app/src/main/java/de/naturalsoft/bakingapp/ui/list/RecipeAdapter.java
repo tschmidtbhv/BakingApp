@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import de.naturalsoft.bakingapp.data.dataObjects.Steps;
 import de.naturalsoft.bakingapp.ui.shared.interfaces.OnRecipeListItemListener;
 import de.naturalsoft.bakingapp.ui.shared.interfaces.OnStepListItemListener;
 import de.naturalsoft.bakingapp.utils.AppConfig;
+import de.naturalsoft.bakingapp.utils.BakingHelper;
 
 /**
  * BackingApp
@@ -47,12 +49,14 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         Object item = mList.get(position);
 
         if(mMode == AppConfig.ADAPTER_MODE_RECIPES) {
+
             Receipe receipe = (Receipe) item;
             holder.itemView.setOnClickListener((View view) -> {
                 ((OnRecipeListItemListener) holder.itemView.getContext()).onItemClicked(receipe);
             });
-
             title = receipe.getName();
+            BakingHelper.loadImageIntoImageView(holder.itemView.getContext(), title, receipe.getImage(), holder.recipeImage);
+
         }else {
 
             Steps step = (Steps)item;
@@ -83,10 +87,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView title;
+        ImageView recipeImage;
 
         public ViewHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.title);
+            recipeImage = itemView.findViewById(R.id.recipe_image);
         }
     }
 }

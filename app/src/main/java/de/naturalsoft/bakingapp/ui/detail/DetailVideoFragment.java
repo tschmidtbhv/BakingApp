@@ -6,33 +6,24 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.ads.AdsMediaSource;
-import com.google.android.exoplayer2.source.dash.DashChunkSource;
-import com.google.android.exoplayer2.source.dash.DashMediaSource;
-import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-
-import org.w3c.dom.Text;
 
 import de.naturalsoft.bakingapp.R;
 import de.naturalsoft.bakingapp.data.dataObjects.Steps;
@@ -47,6 +38,8 @@ import de.naturalsoft.bakingapp.utils.Injector;
  */
 public class DetailVideoFragment extends BaseFragment {
 
+    private static Fragment mFragment;
+
     private static long lastPosition = 0;
 
     private TextView descriptionTextView;
@@ -60,22 +53,26 @@ public class DetailVideoFragment extends BaseFragment {
         String tempUrl;
 
         if (steps != null) {
+            releasePlayer();
 
             tempUrl = steps.getVideoURL();
             lateBindingViews();
 
 
             String description;
+            boolean is_landscapeMode = ((BaseActivity) getActivity()).isLandscapeMode();
 
             if (!tempUrl.isEmpty()) {
 
                 description = steps.getDescription();
                 initialPlayerSetup();
+                playerView.setVisibility(View.VISIBLE);
                 playerView.setPlayer(mExoPlayer);
 
                 mExoPlayer.prepare(buildMediaSource(Uri.parse(tempUrl)));
                 mExoPlayer.seekTo(lastPosition);
                 mExoPlayer.setPlayWhenReady(true);
+                if (!is_landscapeMode) descriptionTextView.setText(description);
             } else {
                 playerView.setVisibility(View.GONE);
                 StringBuilder builder = new StringBuilder();
@@ -84,11 +81,9 @@ public class DetailVideoFragment extends BaseFragment {
                 builder.append(steps.getDescription());
 
                 description = builder.toString();
+                descriptionTextView.setVisibility(View.VISIBLE);
+                descriptionTextView.setText(description);
             }
-
-            boolean is_landscapeMode = ((BaseActivity)getActivity()).isLandscapeMode();
-            if(!is_landscapeMode) descriptionTextView.setText(description);
-
 
         } else {
             Log.d("", "");
@@ -96,7 +91,10 @@ public class DetailVideoFragment extends BaseFragment {
     };
 
     public static DetailVideoFragment getInstance() {
-        return new DetailVideoFragment();
+        if (mFragment == null) {
+            mFragment = new DetailVideoFragment();
+        }
+        return (DetailVideoFragment) mFragment;
     }
 
     @Override
@@ -115,9 +113,7 @@ public class DetailVideoFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        detailViewModel.getStep().observe(this,observer);
-
+        detailViewModel.getStep().observe(this, observer);
     }
 
     private MediaSource buildMediaSource(Uri uri) {
