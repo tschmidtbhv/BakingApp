@@ -13,10 +13,19 @@ import de.naturalsoft.bakingapp.data.dataObjects.Ingredients;
 
 /**
  * BackingApp
- * Created by Thomas Schmidt on 02.07.2018.
+ * Created by Thomas Schmidt on 02.07.2018
+ *
+ * Converter for Ingredients List
  */
 public class IngredientsConverter {
 
+
+    /**
+     * Converts the given
+     * JSON Stream to List
+     * @param data the List as JSON String
+     * @return List of Ingredients Items
+     */
     @TypeConverter
     public static List<Ingredients> stringToList(String data) {
 
@@ -28,6 +37,13 @@ public class IngredientsConverter {
         return gson.fromJson(data, typeList);
     }
 
+
+    /**
+     * Converts the given
+     * List to JSON String
+     * @param ingredients List of Ingredient Obj
+     * @return JSON String
+     */
     @TypeConverter
     public static String listToString(List<Ingredients> ingredients) {
         Gson gson = new Gson();

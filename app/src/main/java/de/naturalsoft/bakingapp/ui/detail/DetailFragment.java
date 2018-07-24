@@ -1,6 +1,7 @@
 package de.naturalsoft.bakingapp.ui.detail;
 
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -20,7 +21,7 @@ import static de.naturalsoft.bakingapp.utils.AppConfig.ADAPTER_MODE_RECIPE_WITH_
  * BackingApp
  * Created by Thomas Schmidt on 03.07.2018.
  */
-public class DetailFragment extends RecyclerFragment {
+public class DetailFragment extends RecyclerFragment implements ViewModelInterface{
 
     private static Fragment mFragment;
     private String CLASSTAG = DetailFragment.class.getSimpleName();
@@ -80,5 +81,10 @@ public class DetailFragment extends RecyclerFragment {
 
     protected DetailViewModel getDetailViewModel() {
         return detailViewModel;
+    }
+
+    @Override
+    public DetailViewModel getViewModel() {
+        return  detailViewModel;
     }
 }

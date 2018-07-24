@@ -1,13 +1,20 @@
 package de.naturalsoft.bakingapp.ui.detail;
 
+import android.arch.lifecycle.LiveData;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
+import android.view.Menu;
+import android.view.MenuItem;
+
+import com.google.gson.Gson;
 
 import de.naturalsoft.bakingapp.R;
 import de.naturalsoft.bakingapp.data.dataObjects.Receipe;
 import de.naturalsoft.bakingapp.data.dataObjects.Steps;
+import de.naturalsoft.bakingapp.ui.ingredients.IngredientsActivity;
 import de.naturalsoft.bakingapp.ui.shared.activity.BaseActivity;
-import de.naturalsoft.bakingapp.ui.shared.interfaces.OnRecipeListItemListener;
 import de.naturalsoft.bakingapp.ui.shared.interfaces.OnStepListItemListener;
+import de.naturalsoft.bakingapp.utils.AppConfig;
 
 /**
  * BackingApp
@@ -42,9 +49,31 @@ public class DetailActivity extends BaseActivity implements OnStepListItemListen
 
         if (!isTablet()) {
             replaceFragment(DetailVideoFragment.getInstance());
-        } else {
-            //Update Main Container
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(item.getItemId() == R.id.ingredients){
+
+            Intent intent = new Intent(this, IngredientsActivity.class);
+            LiveData<Receipe> recipe = ((ViewModelInterface) getCurrentActiviFragment()).getViewModel().getRecipe();
+
+            Gson gson = new Gson();
+            gson.toJson(recipe.getValue().getIngredients());
+            intent.putExtra(AppConfig.RECIPEINCREDIENTSKEY, gson.toJson(recipe.getValue().getIngredients()));
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package de.naturalsoft.bakingapp.ui.list;
+package de.naturalsoft.bakingapp.ui.shared;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

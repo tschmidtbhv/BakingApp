@@ -14,10 +14,19 @@ import de.naturalsoft.bakingapp.data.dataObjects.Steps;
 /**
  * BackingApp
  * Created by Thomas Schmidt on 02.07.2018.
+ * <p>
+ * Converter for Steps List
  */
 
 public class StepsConverter {
 
+    /**
+     * Converts the given
+     * JSON Stream to List
+     *
+     * @param data the List as JSON String
+     * @return List of Steps Items
+     */
     @TypeConverter
     public static List<Steps> stringToList(String data) {
 
@@ -30,9 +39,16 @@ public class StepsConverter {
         return gson.fromJson(data, typeList);
     }
 
+    /**
+     * Converts the given
+     * List to JSON String
+     *
+     * @param steps List of Ingredient Obj
+     * @return JSON String
+     */
     @TypeConverter
-    public static String listToString(List<Steps> objects) {
+    public static String listToString(List<Steps> steps) {
         Gson gson = new Gson();
-        return gson.toJson(objects);
+        return gson.toJson(steps);
     }
 }

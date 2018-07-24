@@ -12,6 +12,8 @@ import de.naturalsoft.bakingapp.data.database.converter.StepsConverter;
 /**
  * BackingApp
  * Created by Thomas Schmidt on 02.07.2018.
+ *
+ * POJO Class for Recip
  */
 @Entity(tableName = "recipes")
 public class Receipe {

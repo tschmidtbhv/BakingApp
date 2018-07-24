@@ -3,6 +3,8 @@ package de.naturalsoft.bakingapp.data.dataObjects;
 /**
  * BackingApp
  * Created by Thomas Schmidt on 02.07.2018.
+ * <p>
+ * POJO Class for Ingredients
  */
 public class Ingredients {
 

@@ -19,7 +19,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.detail.DetailActivity" android:parentActivityName=".ui.list.ListActivity" />
+        <activity
+            android:name=".ui.detail.DetailActivity"
+            android:parentActivityName=".ui.list.ListActivity" />
 
         <receiver android:name=".widget.BakingWidgetProvider">
             <intent-filter>
@@ -30,6 +32,11 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/baking_widget_info" />
         </receiver>
+
+        <activity
+            android:name=".ui.ingredients.IngredientsActivity"
+            android:label="@string/title_activity_incredients"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

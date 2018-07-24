@@ -17,6 +17,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public interface Injector {
 
+    /**
+     * Provides ViewModel
+     * for specific item with it
+     *
+     * @param context  context
+     * @param recipeId the Id for Recipe
+     * @param <T>
+     * @return
+     */
     static <T> ViewModelProvider.NewInstanceFactory provideViewModelFactory(Context context, int recipeId) {
 
         BackingRepository backingRepository = provideBackingRepository(context.getApplicationContext(), provideRetrofit());
@@ -39,7 +48,7 @@ public interface Injector {
     static BackingRepository provideBackingRepository(Context context, Retrofit retrofit) {
 
         BackingDatabase database = BackingDatabase.getInstance(context.getApplicationContext());
-        NetworkDataSource networkDataSource = NetworkDataSource.getInstance(context.getApplicationContext(), retrofit);
+        NetworkDataSource networkDataSource = NetworkDataSource.getInstance(retrofit);
 
         return BackingRepository.getInstance(database.receipeDao(), networkDataSource);
     }

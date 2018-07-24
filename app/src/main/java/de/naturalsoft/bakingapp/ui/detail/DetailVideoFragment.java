@@ -1,6 +1,7 @@
 package de.naturalsoft.bakingapp.ui.detail;
 
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,7 +37,7 @@ import de.naturalsoft.bakingapp.utils.Injector;
  * BackingApp
  * Created by Thomas Schmidt on 14.07.2018.
  */
-public class DetailVideoFragment extends BaseFragment {
+public class DetailVideoFragment extends BaseFragment implements ViewModelInterface{
 
     private static Fragment mFragment;
 
@@ -167,5 +168,10 @@ public class DetailVideoFragment extends BaseFragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mExoPlayer != null) outState.putLong("position", mExoPlayer.getCurrentPosition());
+    }
+
+    @Override
+    public DetailViewModel getViewModel() {
+        return detailViewModel;
     }
 }

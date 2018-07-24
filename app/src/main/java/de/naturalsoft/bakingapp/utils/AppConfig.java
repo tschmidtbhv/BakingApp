@@ -20,11 +20,17 @@ public class AppConfig {
 
     public static final int STEPS_TYPE = 2;
 
-    public static final String RECIPEID = "RECIPEID";
-
     public static final int ADAPTER_MODE_RECIPES = 1;
 
     public static final int ADAPTER_MODE_RECIPE_WITH_ID = 2;
 
     public static final int WIDGET_REQUEST_CODE = 0;
+
+
+    /**
+     * Intent Keys
+     */
+    public static final String RECIPEID = "RECIPEID";
+
+    public static final String RECIPEINCREDIENTSKEY = "RECIPEINCREDIENTSKEY";
 }

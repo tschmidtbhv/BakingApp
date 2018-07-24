@@ -1,23 +1,23 @@
 package de.naturalsoft.bakingapp.data;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.util.Log;
 
-import java.io.IOException;
 import java.util.List;
 
 import de.naturalsoft.bakingapp.data.dataObjects.Receipe;
 import de.naturalsoft.bakingapp.data.database.ReceipeDao;
 import de.naturalsoft.bakingapp.data.network.NetworkDataSource;
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.observers.DisposableObserver;
 import io.reactivex.plugins.RxJavaPlugins;
 import io.reactivex.schedulers.Schedulers;
 
 /**
  * BackingApp
  * Created by Thomas Schmidt on 02.07.2018.
+ * <p>
+ * App Repository
  */
 public class BackingRepository {
 
@@ -29,7 +29,7 @@ public class BackingRepository {
     private static NetworkDataSource mNetworkDataSource;
     private static ReceipeDao mReceipeDao;
 
-    public BackingRepository(ReceipeDao receipeDao, NetworkDataSource networkDataSource) {
+    private BackingRepository(ReceipeDao receipeDao, NetworkDataSource networkDataSource) {
         mReceipeDao = receipeDao;
         mNetworkDataSource = networkDataSource;
 
@@ -55,40 +55,50 @@ public class BackingRepository {
         return sINSTANCE;
     }
 
+    /**
+     * Get all availalbe Recipes
+     *
+     * @return
+     */
     public LiveData<List<Receipe>> getAllRecipes() {
         return mReceipeDao.getAllRecipes();
     }
 
+    /**
+     * Get specific Recipe
+     * for given id
+     *
+     * @param id for recipe
+     * @return LiveData for Recipe
+     */
     public LiveData<Receipe> getRecipeForId(int id) {
         return mReceipeDao.getRecipeForId(id);
     }
 
+    /**
+     * Setting the observer
+     */
     private void setObserver() {
         LiveData<List<Receipe>> recipes = mNetworkDataSource.getCurrentRecipes();
-        recipes.observeForever(recipesFromNetwork -> {
-
-            getInsertObservable(recipesFromNetwork).subscribeOn(Schedulers.io()).subscribe(new DisposableObserver<List<Receipe>>() {
-                @Override
-                public void onNext(List<Receipe> receipes) {
-                    mReceipeDao.insertRecipes(receipes);
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    Log.d(CLASSTAG, "onError while saving recipes");
-                }
-
-                @Override
-                public void onComplete() {
-                    Log.d(CLASSTAG, "onComplete");
-                }
-            });
-        });
+        recipes.observeForever(getInsertRecipeObserver());
     }
 
-    private Observable<List<Receipe>> getInsertObservable(List<Receipe> recipes) {
-        return Observable.defer(() -> {
-            return Observable.just(recipes);
-        });
+    /**
+     * Get Observer
+     *
+     * @return Observer<List   <   Receipe>>
+     */
+    private Observer<List<Receipe>> getInsertRecipeObserver() {
+
+        return recipesFromNetwork -> {
+
+            Observable.just(recipesFromNetwork).subscribeOn(Schedulers.io()).subscribe(next -> {
+                mReceipeDao.insertRecipes(next);
+            }, error -> {
+                Log.d(CLASSTAG, "onError while saving recipes");
+            }, () -> {
+                Log.d(CLASSTAG, "onComplete");
+            });
+        };
     }
 }

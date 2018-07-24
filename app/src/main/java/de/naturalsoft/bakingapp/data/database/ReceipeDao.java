@@ -13,6 +13,9 @@ import de.naturalsoft.bakingapp.data.dataObjects.Receipe;
 /**
  * BackingApp
  * Created by Thomas Schmidt on 02.07.2018.
+ * <p>
+ * Data Access Object
+ * Querys for the Database
  */
 @Dao
 public interface ReceipeDao {
