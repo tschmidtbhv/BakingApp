@@ -21,6 +21,25 @@ Libraries are used in this Project are:
 
 ## Common Project Requirements 
 
+App is written solely in the Java Programming Language.
+Movies are displayed in the main layout via a grid of their corresponding movie poster thumbnails.
+UI contains an element (i.e a spinner or settings menu) to toggle the sort order of the movies by: most popular, highest rated.
+UI contains a screen for displaying the details for a selected movie.
+Movie details layout contains title, release date, movie poster, vote average, and plot synopsis.
+App utilizes stable release versions of all libraries, Gradle, and Android Studio.
+
+## General App Usage
+
+###Display recipes
+App should display recipes from provided network resource. 
+
+###App Navigation
+App should allow navigation between individual recipes and recipe steps.
+
+###Utilization of RecyclerView
+App uses RecyclerView and can handle recipe steps that include videos or images.
+
+App conforms to common standards found in the Android Nanodegree General Project Guidelines.
 
 
 ## License
