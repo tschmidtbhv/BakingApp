@@ -1,7 +1,6 @@
 package de.naturalsoft.bakingapp.ui.detail;
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,15 +28,17 @@ import com.google.android.exoplayer2.util.Util;
 import de.naturalsoft.bakingapp.R;
 import de.naturalsoft.bakingapp.data.dataObjects.Steps;
 import de.naturalsoft.bakingapp.ui.shared.ViewModelFactory;
-import de.naturalsoft.bakingapp.ui.shared.activity.BaseActivity;
 import de.naturalsoft.bakingapp.ui.shared.fragment.BaseFragment;
+import de.naturalsoft.bakingapp.utils.BakingHelper;
 import de.naturalsoft.bakingapp.utils.Injector;
 
 /**
  * BackingApp
  * Created by Thomas Schmidt on 14.07.2018.
  */
-public class DetailVideoFragment extends BaseFragment implements ViewModelInterface{
+public class DetailVideoFragment extends BaseFragment implements ViewModelInterface {
+
+    private final static String CLASSTAG = DetailFragment.class.getSimpleName();
 
     private static Fragment mFragment;
 
@@ -51,21 +52,24 @@ public class DetailVideoFragment extends BaseFragment implements ViewModelInterf
 
     private Observer<Steps> observer = steps -> {
 
-        String tempUrl;
-
         if (steps != null) {
             releasePlayer();
 
-            tempUrl = steps.getVideoURL();
+            String tempUrl = steps.getVideoURL();
             lateBindingViews();
 
 
             String description;
-            boolean is_landscapeMode = ((BaseActivity) getActivity()).isLandscapeMode();
+            boolean is_landscapeMode = BakingHelper.isLandscapeMode(getContext());
 
             if (!tempUrl.isEmpty()) {
 
-                description = steps.getDescription();
+                if (!is_landscapeMode) {
+                    descriptionTextView.setText(steps.getDescription());
+                } else {
+                    descriptionTextView.setVisibility(View.GONE);
+                }
+
                 initialPlayerSetup();
                 playerView.setVisibility(View.VISIBLE);
                 playerView.setPlayer(mExoPlayer);
@@ -73,23 +77,34 @@ public class DetailVideoFragment extends BaseFragment implements ViewModelInterf
                 mExoPlayer.prepare(buildMediaSource(Uri.parse(tempUrl)));
                 mExoPlayer.seekTo(lastPosition);
                 mExoPlayer.setPlayWhenReady(true);
-                if (!is_landscapeMode) descriptionTextView.setText(description);
-            } else {
-                playerView.setVisibility(View.GONE);
-                StringBuilder builder = new StringBuilder();
-                builder.append(getString(R.string.no_video_provided));
-                builder.append("\n");
-                builder.append(steps.getDescription());
 
-                description = builder.toString();
+            } else {
+                description = buildDescription(steps);
+
+                playerView.setVisibility(View.GONE);
                 descriptionTextView.setVisibility(View.VISIBLE);
                 descriptionTextView.setText(description);
             }
 
         } else {
-            Log.d("", "");
+            Log.d(CLASSTAG, getString(R.string.no_steps_provided));
         }
     };
+
+    /**
+     * Build description for
+     * Step without video
+     *
+     * @param steps Current Step
+     * @return builded String
+     */
+    private String buildDescription(Steps steps) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(getString(R.string.no_video_provided));
+        builder.append("\n");
+        builder.append(steps.getDescription());
+        return builder.toString();
+    }
 
     public static DetailVideoFragment getInstance() {
         if (mFragment == null) {

@@ -24,19 +24,49 @@ public abstract class BaseActivity extends AppCompatActivity {
         setContainerFragment(R.id.container, getFragment());
     }
 
+    /**
+     * Every Activity which
+     * extends need to create
+     * a Fragment which sets
+     * to the Container
+     * <p>
+     * Note: It`s important to
+     * have an container with the id
+     * R.id.container as default
+     *
+     * @return Fragment
+     */
     protected abstract Fragment getFragment();
 
-    protected Fragment getCurrentActiviFragment(){
+    /**
+     * Returns the current Fragment
+     *
+     * @return Fragment
+     */
+    protected Fragment getCurrentActiviFragment() {
         return mFragment;
     }
 
+    /**
+     * Replace the Fragment
+     * with given Fragment
+     *
+     * @param fragment new Fragment
+     */
     protected void replaceFragment(Fragment fragment) {
 
         mFragment = fragment;
         setContainerFragment(R.id.container, mFragment);
     }
 
-    protected void setContainerFragment(int layoutResourceId, Fragment fragment){
+    /**
+     * Replace the Fragment
+     * in Container id
+     *
+     * @param layoutResourceId should be Container ID
+     * @param fragment         to replace
+     */
+    protected void setContainerFragment(int layoutResourceId, Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(layoutResourceId, fragment);
@@ -44,17 +74,23 @@ public abstract class BaseActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    public void swapFragment(Fragment fragment){
-        if(fragment != null)replaceFragment(fragment);
+    /**
+     * Swap the Fragment
+     * when not NULL
+     *
+     * @param fragment new Fragment
+     */
+    public void swapFragment(Fragment fragment) {
+        if (fragment != null) replaceFragment(fragment);
     }
 
+    /**
+     * Every Activity need
+     * to define a Layout Resource
+     * this resource will set
+     *
+     * @return layout recource id
+     */
     protected abstract int getLayoutResource();
 
-    public boolean isTablet(){
-        return getResources().getBoolean(R.bool.is_tablet);
-    }
-
-    public boolean isLandscapeMode() {
-        return getResources().getBoolean(R.bool.is_landscape);
-    }
 }

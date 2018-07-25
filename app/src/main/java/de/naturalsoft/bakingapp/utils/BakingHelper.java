@@ -7,6 +7,8 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
+import de.naturalsoft.bakingapp.R;
+
 /**
  * BackingApp
  * Created by Thomas Schmidt on 22.07.2018.
@@ -18,10 +20,10 @@ public class BakingHelper {
         if (url.isEmpty()) {
 
             int resourceId;
-            if((resourceId = hasResource(context, title)) != 0){
+            if ((resourceId = hasResource(context, title)) != 0) {
                 imageView.setVisibility(View.VISIBLE);
                 Picasso.get().load(resourceId).into(imageView);
-            }else {
+            } else {
                 imageView.setVisibility(View.GONE);
             }
             return;
@@ -31,9 +33,9 @@ public class BakingHelper {
         Picasso.get().load(url).into(imageView);
     }
 
-    public static int hasResource(Context context, String title){
+    private static int hasResource(Context context, String title) {
         title = title.toLowerCase().replaceAll(" ", "_");
-        int resourceId = context.getResources().getIdentifier(title,"drawable",context.getPackageName());
+        int resourceId = context.getResources().getIdentifier(title, "drawable", context.getPackageName());
 
         return resourceId;
     }
@@ -52,5 +54,14 @@ public class BakingHelper {
         int scalingFactor = 400;
 
         return (int) (dpWidth / scalingFactor);
+    }
+
+
+    public static boolean isTablet(Context context) {
+        return context.getResources().getBoolean(R.bool.is_tablet);
+    }
+
+    public static boolean isLandscapeMode(Context context) {
+        return context.getResources().getBoolean(R.bool.is_landscape);
     }
 }

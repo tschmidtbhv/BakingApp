@@ -16,6 +16,8 @@ import de.naturalsoft.bakingapp.ui.shared.activity.BaseActivity;
 import de.naturalsoft.bakingapp.ui.shared.interfaces.OnStepListItemListener;
 import de.naturalsoft.bakingapp.utils.AppConfig;
 
+import static de.naturalsoft.bakingapp.utils.BakingHelper.isTablet;
+
 /**
  * BackingApp
  * Created by Thomas Schmidt on 13.07.2018.
@@ -26,11 +28,11 @@ public class DetailActivity extends BaseActivity implements OnStepListItemListen
     protected Fragment getFragment() {
 
         Fragment fragment = getCurrentActiviFragment();
-        if(fragment == null) fragment = DetailFragment.getInstance();
+        if (fragment == null) fragment = DetailFragment.getInstance();
 
         replaceFragment(fragment);
 
-        if (isTablet()) {
+        if (isTablet(this)) {
             setContainerFragment(R.id.main_container, DetailVideoFragment.getInstance());
         }
 
@@ -47,7 +49,7 @@ public class DetailActivity extends BaseActivity implements OnStepListItemListen
 
         ((DetailFragment) getCurrentActiviFragment()).getDetailViewModel().setSteps(step);
 
-        if (!isTablet()) {
+        if (!isTablet(this)) {
             replaceFragment(DetailVideoFragment.getInstance());
         }
     }
@@ -62,7 +64,7 @@ public class DetailActivity extends BaseActivity implements OnStepListItemListen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if(item.getItemId() == R.id.ingredients){
+        if (item.getItemId() == R.id.ingredients) {
 
             Intent intent = new Intent(this, IngredientsActivity.class);
             LiveData<Receipe> recipe = ((ViewModelInterface) getCurrentActiviFragment()).getViewModel().getRecipe();

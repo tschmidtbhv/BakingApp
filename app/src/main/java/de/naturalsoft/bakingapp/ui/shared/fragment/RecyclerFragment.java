@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,14 +17,19 @@ import de.naturalsoft.bakingapp.R;
 import de.naturalsoft.bakingapp.ui.shared.RecipeAdapter;
 import de.naturalsoft.bakingapp.utils.BakingHelper;
 
+import static de.naturalsoft.bakingapp.utils.AppConfig.ADAPTER_MODE_RECIPE_WITH_ID;
+import static de.naturalsoft.bakingapp.utils.BakingHelper.isTablet;
+
 /**
  * BackingApp
  * Created by Thomas Schmidt on 13.07.2018.
+ * <p>
+ * Base Class for Fragments with RecyclerView
  */
 public abstract class RecyclerFragment extends BaseFragment {
 
     RecyclerView recyclerView;
-    GridLayoutManager mLayoutManager;
+
     RecipeAdapter recipeAdapter;
     ProgressBar progressBar;
 
@@ -33,10 +39,17 @@ public abstract class RecyclerFragment extends BaseFragment {
 
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         recyclerView = rootView.findViewById(R.id.recyclerView);
-        mLayoutManager = new GridLayoutManager(this.getContext(), BakingHelper.calculateNoOfColumns(this.getContext()));
+        RecyclerView.LayoutManager layoutManager = null;
+
+
+        if (getAdapterMode() != ADAPTER_MODE_RECIPE_WITH_ID && isTablet(getContext())) {
+            layoutManager = new GridLayoutManager(this.getContext(), BakingHelper.calculateNoOfColumns(this.getContext()));
+        } else {
+            layoutManager = new LinearLayoutManager(getContext());
+        }
 
         recipeAdapter = new RecipeAdapter(getAdapterMode());
-        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recipeAdapter);
 
         progressBar = rootView.findViewById(R.id.progressbar);
@@ -45,7 +58,7 @@ public abstract class RecyclerFragment extends BaseFragment {
 
     protected abstract int getAdapterMode();
 
-    public void swapList(List<?> list){
+    public void swapList(List<?> list) {
         recipeAdapter.swapList(list);
     }
 

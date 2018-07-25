@@ -22,5 +22,12 @@ public abstract class BaseFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Every Fragment need
+     * to define a Layout Resource
+     * this resource will set
+     *
+     * @return layout recource id
+     */
     protected abstract int getFragmentLayoutResourceId();
 }
