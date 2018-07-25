@@ -30,13 +30,13 @@ App utilizes stable release versions of all libraries, Gradle, and Android Studi
 
 ## General App Usage
 
-###Display recipes
+### Display recipes
 App should display recipes from provided network resource. 
 
-###App Navigation
+### App Navigation
 App should allow navigation between individual recipes and recipe steps.
 
-###Utilization of RecyclerView
+### Utilization of RecyclerView
 App uses RecyclerView and can handle recipe steps that include videos or images.
 
 App conforms to common standards found in the Android Nanodegree General Project Guidelines.
