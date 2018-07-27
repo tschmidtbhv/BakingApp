@@ -27,6 +27,9 @@ public class BakingWidgetProvider extends AppWidgetProvider {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, AppConfig.WIDGET_REQUEST_CODE,intent,0);
         views.setPendingIntentTemplate(R.id.appwidget_rootView, pendingIntent);
 
+        Intent listIntent = new Intent(context, WidgetRemoteViewService.class);
+        views.setRemoteAdapter(R.id.appwidget_listview, listIntent);
+
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }

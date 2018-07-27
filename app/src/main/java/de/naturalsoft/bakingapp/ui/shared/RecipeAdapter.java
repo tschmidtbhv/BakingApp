@@ -22,6 +22,8 @@ import de.naturalsoft.bakingapp.utils.BakingHelper;
 /**
  * BackingApp
  * Created by Thomas Schmidt on 10.07.2018.
+ * <p>
+ * Default Adapter for Recipe and Steps usage
  */
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder> {
 
@@ -48,7 +50,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
         String title;
         Object item = mList.get(position);
 
-        if(mMode == AppConfig.ADAPTER_MODE_RECIPES) {
+        if (mMode == AppConfig.ADAPTER_MODE_RECIPES) {
 
             Receipe receipe = (Receipe) item;
             holder.itemView.setOnClickListener((View view) -> {
@@ -57,9 +59,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.ViewHolder
             title = receipe.getName();
             BakingHelper.loadImageIntoImageView(holder.itemView.getContext(), title, receipe.getImage(), holder.recipeImage);
 
-        }else {
+        } else {
 
-            Steps step = (Steps)item;
+            Steps step = (Steps) item;
             title = step.getShortDescription();
             holder.itemView.setOnClickListener((View view) -> {
                 ((OnStepListItemListener) holder.itemView.getContext()).onItemClicked(step);

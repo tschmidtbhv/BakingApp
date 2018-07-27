@@ -70,8 +70,10 @@ public class DetailActivity extends BaseActivity implements OnStepListItemListen
             LiveData<Receipe> recipe = ((ViewModelInterface) getCurrentActiviFragment()).getViewModel().getRecipe();
 
             Gson gson = new Gson();
-            gson.toJson(recipe.getValue().getIngredients());
-            intent.putExtra(AppConfig.RECIPEINCREDIENTSKEY, gson.toJson(recipe.getValue().getIngredients()));
+
+            Receipe receipe = recipe.getValue();
+            intent.putExtra(AppConfig.RECIPEID, receipe.getUid());
+            intent.putExtra(AppConfig.RECIPEINCREDIENTSKEY, gson.toJson(receipe.getIngredients()));
             startActivity(intent);
         }
 

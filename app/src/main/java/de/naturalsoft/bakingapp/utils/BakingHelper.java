@@ -5,9 +5,15 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Type;
+import java.util.List;
+
 import de.naturalsoft.bakingapp.R;
+import de.naturalsoft.bakingapp.data.dataObjects.Ingredients;
 
 /**
  * BackingApp
@@ -63,5 +69,19 @@ public class BakingHelper {
 
     public static boolean isLandscapeMode(Context context) {
         return context.getResources().getBoolean(R.bool.is_landscape);
+    }
+
+    public static List<Ingredients> convertToIngredients(String json) {
+
+        Gson gson = new Gson();
+        Type listType = new TypeToken<List<Ingredients>>() {
+        }.getType();
+        return (List<Ingredients>) gson.fromJson(json, listType);
+    }
+
+    public static String buildStringForSubtitle(double first, String second) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(first).append(" | ").append(second);
+        return builder.toString();
     }
 }

@@ -12,6 +12,8 @@ import java.util.List;
 import de.naturalsoft.bakingapp.R;
 import de.naturalsoft.bakingapp.data.dataObjects.Ingredients;
 
+import static de.naturalsoft.bakingapp.utils.BakingHelper.buildStringForSubtitle;
+
 /**
  * BackingApp
  * Created by Thomas Schmidt on 23.07.2018.
@@ -34,9 +36,8 @@ class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.ViewHol
         Ingredients ingredient = ingredients.get(position);
         holder.title.setText(ingredient.getIngredient());
 
-        StringBuilder builder = new StringBuilder();
-        builder.append(ingredient.getQuantity()).append(" | ").append(ingredient.getMeasure());
-        holder.subTitle.setText(builder.toString());
+
+        holder.subTitle.setText(buildStringForSubtitle(ingredient.getQuantity(), ingredient.getMeasure()));
     }
 
     public void swapList(List<Ingredients> list) {
